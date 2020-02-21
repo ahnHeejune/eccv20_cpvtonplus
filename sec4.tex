@@ -3,26 +3,12 @@
 
 \subsection{Implementation details} 
 
-We used the same dataset used in CP-VTON, collected first for VITON. We used IoU and SSIM performance metrics for the same cloth retry-on cases for GMM and TOM. For final output quality measures, we used SSIM, Inception Score (IS)[9] and LPIPS[10] for different cloth try-on. The subjective qualities can be examined in Fig. 5/7.  Special comments are required for the IoU values, where CP-VTON (0.78) is slightly higher than CP-VTON+ (0.75). The un-expected results originated due to CP-VTON generating as in the current cloth shape. However, similar clothes are not always applicable, furthermore, it generates wrong shaped results for different clothes. Fig. 6 illustrates this with two typical example, plugging and normal tops
-
-\subsection{Comparative Results}
-
-\begin{figure}
-\centering
-%\includegraphics[height=6.5cm, scale=1]{figures/vton_result1.png} 
-%\includegraphics[height=6.5cm, scale=1]{figures/vton_result2.png} 
-\caption{VTON results}
-\label{fig:vtonresults}
-\end{figure}
-
-
-Final, i.e., TOM results are evaluated with non-reference methods, LPIPS[10], IS[9] and SSIM. Our proposed method, CP-VTON+ outperforms CP-VTON in LPIPS with 0.1263 against 0.1397, in SSIM with 0.8076 over 0.7798, and in IS with 2.76 over 2.7417. The subjective evaluation shows significant visual improvements, especially in cloth textures such as logos and patterns (Fig. 7). We added the test results for all test cases for comparison between CP-VTON and CP-VTON+ in supplementary materials, together with the categorized comparison of SCM-based VTON, VITON and CP-VTON.
+We used the same dataset used in CP-VTON, collected first for VITON. We used IoU and SSIM performance metrics for the same cloth retry-on cases for GMM and TOM. For final output quality measures, we used SSIM, Inception Score (IS)\cite{salimans2016improved} and Learned Perceptual Image Patch Similarity (LPIPS) metric \cite{zhang2018unreasonable} for different cloth try-on. The subjective qualities can be examined in Fig. 5/7.  Special comments are required for the IoU values, where CP-VTON (0.78) is slightly higher than CP-VTON+ (0.75). The un-expected results originated due to CP-VTON generating as in the current cloth shape. However, similar clothes are not always applicable, furthermore, it generates wrong shaped results for different clothes. Fig. 6 illustrates this with two typical example, plugging and normal tops
 
 
 \subsection{Ablation Study}
 
 Figure ~\ref{fig:ablation} we highlight the impact of the identified problems and improvement of the proposed method step-by-step through the ablation study of CP-VTON+. The first and second columns are target humans and try-on clothes, respectively. The third column is vanilla CVP-VTON results. The fourth column is when unchanged clothes and body parts are added to the reserved region inputs of TOM, retaining the original pants texture. The fifth column is when the mask loss function of TOM is updated with the target cloth area, making the texture and color of cloth sharp and vivid. Finally the sixth and last column is when the body masks are updated, replacing the skin area wrongly labelled as background and hair are removed from the reserved region input of GMM, making GMM can better cloth-and-hair-agnostic human representation.  
-
 
 WHEN WE GET the GMM improvement, Where we can add this? may be the first step?
 
@@ -33,6 +19,20 @@ WHEN WE GET the GMM improvement, Where we can add this? may be the first step?
 }
 \label{fig:ablation}
 \end{figure}
+
+
+\subsection{Comparative Results}
+
+\begin{figure}
+\centering
+%\includegraphics[height=6.5cm, scale=1]{figures/vton_result1.png} 
+\includegraphics[height=6.5cm, scale=1]{figures/cpvton+compare.png} 
+\caption{VTON results: We have to include 1) GMM and TOM results for demonstrating all the improvement one by one: }
+\label{fig:vtonresults}
+\end{figure}
+
+
+Final, i.e., TOM results are evaluated with non-reference methods, LPIPS, IS and SSIM. Our proposed method, CP-VTON+ outperforms CP-VTON in LPIPS with 0.1263 against 0.1397, in SSIM with 0.8076 over 0.7798, and in IS with 2.76 over 2.7417. The subjective evaluation shows significant visual improvements, especially in cloth textures such as logos and patterns (Fig. 7). We added the test results for all test cases for comparison between CP-VTON and CP-VTON+ in supplementary materials, together with the categorized comparison of SCM-based VTON, VITON and CP-VTON.
 
 
 

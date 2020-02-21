@@ -4,61 +4,61 @@
 
 \subsection{Overview} 
 
-Fig. 4 illustrates the new pipeline emphasizing the modifications from CP-VTON, which tackles all 4 issues above mentioned except extreme 3D pose of target human.
+Fig. \ref{fig:piepline} illustrates the new VTON pipeline that tackle the problem mentioned above, based on the pipeline structure of CV-VTON, hence named CP-VTON+. The modified components are highlighted for comparison, described as follows.
+
+\subsubsection{GMM Modification}
 
 \begin{itemize}
 
-\item Correction on the cloth agnostic representation   
+\item[$\bullet$]  Correction on the cloth agnostic human representation:
+It is crucial to obtain the complete target body area for the try-on cloth and the target area should be the current-cloth agnostic. original VITON dataset does not satisfy this requirement.  
+% BG2SKIN
+To be independent upon the current cloth the human wear, a new label ‘skin’ is added to the label set,  and the pixels wrongly labelled as 'background' in VITON dataset are replaced by 'skin' considering the joint locations. The skin-labelled area now is included in the silhouette in the human representation (Figure  ~\ref{fig:cpvtonissues}).
+% HAIR-OCCLUSION
+To recover the hair occlusion, first the hair occlusion area are identified as the intersection of convex contour of the upper cloth and the hair-labelled area, and the intersection are re-labelled as upper cloth.   
 
 
-\begin{itemize}
+\item[$\bullet$] GIC Network modification: 
+CP-VTON GMM network is built on CNN geometric matching \cite{rocco2017convolutional}, and trained in self-supervised manner by the L1 loss between the warped cloth images and the current human cloth. It is quite interesting that CNN geometric matching uses a pair of color images, but CP-VTON GMM uses a human representation, e.g. silhouette and joint heatmap with the try-on cloth.  The human representation only provide the shape and structure information and the try-on cloth provides both texture and shape information. Furthermore the texture information is not useful for finding the corresponding locations. The experiments above revealed the warped cloth often distorted severely. We tried to understand the origin of this distortion, but failed. From this two observation, the new GMM is design to use mask of try-on cloth, i.e. taking into account the only shape information of the try-on cloth, and regularize the transform parameter in some restricted range by adding regularization loss to the training network. The grid warping regularization is defined not to have too much different warping from the before and next grid gap in equation ~\ref{eq:gridloss}.
 
-\item Modification 1: We added a new label ‘Skin’ to the human parsing data to represent the human body shape more accurately (Fig. 2. (a) right).
+ 
+%, which again uses the spatial transform networks by Zimmerman et al.'s \cite{jaderberg2015spatial}. Although warping network can work in both instance-level and category-level, our experiments  reveals the warped cloth often distorted severely.
 
-\item Modification 2: We removed the hair label from the Reserved Regions of GMM’s Person Representation input, i.e. only face remains.  
+
+%Our finding is that the warping network try to matches cloth images with human representation of silhouette and joint heatmap. The latter does not have no texture features but the shape information. From the failure case examinations, we found that the warping in the failure case is often too extreme, so that we try to restrict the warping parameters. Instead of single step TPS warping, we designed 2 stage warping network, in the first stage it warped roughly with Affine transform, and in the second stage it warped delicately with TPS transform. Not to have un-realistic warping, we added warping regularization loss. In the second stage, the sizes of cloth and target area in the human representation are in the same scale, so that the matching network can find the matching better. 
+
+
+\begin{equation}
+ L  = c_1 \cdot L1(I_c, I_{c,GT}) + c_2 \cdot  L_{reg}  
+\end{equation}
+
+\begin{equation}\label{eq:gridloss}
+\begin{aligned}
+ L_{reg} (G_x, G_y) = \sum_x \sum_y | G_x(x+1, y) - G_x(x, y) | - | G_x(x, y) - G_x(x-1, y) | \\
+ + | G_y(x, y+1) - G_y(x, y) | - | G_y(x, y) - G_y(x, y-1) |
+\end{aligned}
+\end{equation}
+
 
 \end{itemize}
 
-
-\item Un-changed human area inclusion  
-
-\begin{itemize}
-\item Modification 3: We added extra human components except the target cloth area, e.g. bottom clothes and legs in the Reserved Regions of Person Representation to TOM, along with face and hair (Fig. 2. (b) right).
-
-\end{itemize}
-
-\item Improving Composition alpha-map 
+\subsubsection{TOM Modification}
 
 
 \begin{itemize}
 
-\item Modification 4: In the mask loss term in TOM loss function, we replaced the Composition Mask with supervised ground truth mask for a strong alpha mask.
+\item[$\bullet$] Retaining the remaining area except the target cloth  :
+In order to retain the other human components except the target cloth area, e.g. bottom clothes and legs, the all other area except the target cloth area are added for the human representation input of TOM, along with face and hair (Figure ~\ref{fig:cpvtonissues})
+
+\item[$\bullet$] Training Composition alpha-map:  
+In the mask loss term in TOM loss function, we replaced the Composition Mask with supervised ground truth mask for a strong alpha mask.
 
 \begin{equation}
 L=c_1 |I_0-I_{GT} |+  c_2 L_{VGG}+c_1 |M_{GT}-M_0 |       
 \end{equation}
 
-\item Modification 5: Lastly, we added the binary mask of warped cloth to TOM network input so that TOM can clearly differentiate the target cloth area regardless of cloth color.  
+Also, we added the binary mask of warped cloth to TOM network input so that TOM can clearly differentiate the target cloth area regardless of cloth color.  
 
-\end{itemize}
-
-\item GMM improvement Will be here: GIC loss and Mask ETC
-
-
-The previous image based VTON algorithms use geometric matching and transform model  of Roccos et al. \cite{rocco2017convolutional}, which again uses the spatial transform networks by Zimmerman et al.'s \cite{jaderberg2015spatial}. Although warping network can work in both instance-level and category-level, our experiments  reveals the warped cloth often distorted severely. We try to understand the original of the misbehaivors, but failed to do. Our finding is that the warping network try to matches cloth images with human representation of silhouette and joint heatmap. The latter does not have no texture features but the shape information. From the failure case examinations, we found that the warping in the failure case is often too extreme, so that we try to restrict the warping parameters. Instead of single step TPS warping, we designed 2 stage warping network, in the first stage it warped roughly with Affine transform, and in the second stage it warped delicately with TPS transform. Not to have un-realistic warping, we added warping regularization loss. In the second stage, the sizes of cloth and target area in the human representation are in the same scale, so that the matching network can find the matching better. 
-
-\begin{equation}
- L_{gridreg} (G_x, G_y) = sum_x sum_y | G_x(x+1, y) - G_x(x, y) | + | G_x(x, y) - G_x(x-1, y) | + | G_x(x, y+1) - G_x(x, y) | + | G_x(x, y) - G_x(x, y-1) |
-\end{equation}
-
-
-In the experiment section, we will describe the effects of 2 stage method and regularization method.
- 
-   
-Thai Write here the details for design and figure.
-
-
-Thai Write the experimental results in the next section
 
 \end{itemize}
 
@@ -70,10 +70,10 @@ Thai Write the experimental results in the next section
 \label{fig:piepline}
 \end{figure}
 
-\begin{figure}
-\centering
+%\begin{figure}
+%\centering
 %\includegraphics[height=6.5cm, scale=1]{figures/cpvton+pipeline.png}   
-\caption{2 stage GMM design with regularization loss}
-\label{fig:piepline}
-\end{figure}
+%\caption{2 stage GMM design with regularization loss}
+%\label{fig:piepline}
+%\end{figure}
 
