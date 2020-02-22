@@ -59,18 +59,17 @@ Cardiff University, Cardiff, 69121 Heidelberg, UK
 
 \begin{abstract}
 
-Recently, image-based virtual try-on (VTON) technology has drawn increasing research attraction for practical on-line apparel shopping. 
-Many previous studies assumes the input of a try-on cloth and a target human image and 2-step pipeline: first, it warps the try-on cloth to align with the target human, and then blends the warped cloth with the target human image.
-The contribution of this work are three-fold. 
-First, in spite of successful demonstration of the previous work, the  input data condition for successful performance has not yet well identified. We conduct a performance study with classified inputs in cloth style, and human pose and shape. reveals that the current image-based VTON algorithms has a limited working condition.
-Second, through detailed examination of the classified experiment, we identify the problem in the dataset such as improper human segmentation labelling, improper matching with user demands, such as not retaining non-targeted cloth, and weakness of the state-of-the-art algorithms in cloth warping and blending. Finally, we proposed a new image-based algorithm, named CP-VTON+, tackling the observed issues. Experiment with popular dataset proves the observed issues and show CP-VTON+ consistent improvements in SSIM for same cloth re-try-on, LPIPS, and IS for new cloth try-on over the-state-of-the-art algorithm.
-       
+ Recently, image-based virtual try-on (VTON) technology has
+drawn increasing research attraction for practical online apparel shopping.
+Many previous studies assume the input of a try-on cloth and a
+target human image and 2-step pipeline: first, it warps the try-on cloth to
+align with the target human, and then blends the warped cloth with the
+target human image. The contributions of this work are three-fold. First,
+despite the successful demonstration of the previous work, the input data
+condition for successful performance has not yet well investigated. Thus, we conduct a performance study with classified inputs in cloth style, and human pose and shape. reveals that the current image-based VTON algorithms have a limited working condition. Second, through our detailed examination of the classified experiment, we identify the problem in the dataset such as improper human segmentation labeling, improper matching with user demands, such as not retaining non-targeted cloth, and weakness of the state-of-the-art algorithms in cloth warping and blending. Finally, we proposed a new image-based algorithm, named CP-VTON+, tackling the observed issues. The experiment proves shows CP-VTON+ consistent improvements in IoU and SSIM for the same cloth re-try-on, and IS and visual observation for new cloth try-on over the state-of-the-art algorithm.       
 
 \keywords{Virtual Try-On, Image-based, Deep-Learning, Quality Comparison}
 \end{abstract}
-
-
-
 
 \include{sec1}  % intro
 \include{sec2}  % Classified analysis
@@ -80,11 +79,14 @@ Second, through detailed examination of the classified experiment, we identify t
 
 \section{Conclusions}
 
-Almost all real computer vision algorithms have a certain condition where they work successfully and not. Therefore it is more important than merely developing better algorithms to identify the working condition of algorithms and approaches.  By categorized cloth and human inputs and analysis not only final try-on results but also intermediate results of the pipeline, e.g. the warped cloth, we showed the key successful and unsuccessful conditions and origins of a typical image-based VTON algorithm, CP-VTON. 
-
-With these identified issues, a CP-VTON+, an improvement to CP-VTON was proposed, which produces significant quality improvements over existing state-of-the-art algorithm, CP-VTON. 
-
-However, there remains several areas that we could not yet solved. The automatic warping to the target human shape is still challenging in feature point search and matching and limitation of non-rigid 2-D transforms, and the accuracy human parsing  needs to be improved.
+Recently, image-based virtual try-on (VTON) technology has
+drawn increasing research attraction for practical online apparel shopping.
+Many previous studies assume a pair of a try-on cloth and a
+target human image as input data and constructed as a 2-step pipeline: first, it warps the try-on cloth to
+align with the target human and then blends the warped cloth with the
+target human image. The contributions of this work are three-fold. First,
+despite the successful demonstration of the previous work, the input data
+condition for successful performance has not yet well investigated. Thus, we conduct a performance study with classified inputs in cloth style, and human pose and shape. reveals that the current image-based VTON algorithms have a limited working condition. Second, through our detailed examination of the classified experiment, we identify the problem in the dataset such as improper human segmentation labeling, improper matching with user demands, such as not retaining non-targeted cloth, and weakness of the state-of-the-art algorithms in cloth warping and blending. Finally, we proposed an improvement from the state-of-the-art algorithm, CP-VTON,  thus named CP-VTON+, tackling the observed issues. The experiment proves shows CP-VTON+ consistent improvements in IoU and SSIM for the same cloth re-try-on, and IS and visual observation for new cloth try-on over the state-of-the-art algorithm.
   
      
 \clearpage
