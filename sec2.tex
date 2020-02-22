@@ -5,14 +5,97 @@
 
 In this Section, we started with evaluating the 2D image based VTON algorithms using a try-on cloth and a target human image. The human representation is composed of 1) heat maps for each joints 2) silhouette of human body, and 3) face and skin pixels patches (non-cloth and human identity area). It is assumed that the target human image is pre-processed for a cloth agnostic human representation by a human pose estimation like OpenPose\cite{Cao2018OpenPoseRM} and human parsing like LIP \cite{Liang2018LookIP}. 
 
+For clear notation, $C_i \in R^{HxWx3} $ denotes the try-on input cloth image 
+and $ H_t = (J_t, R_t, S_t)$ is a human representation, 
+where $ J_t \in R^{HxWxJ}$, $R_t \in R^{HxWx3}$, and $ S_t \in R^{HxW}$ are a joint heat-map, residual (e.g hands, faces, hairs) color pixel images, and body shape silhouette merged human parsing segmentations from a human image $I_i$.    
+
+
 The previous algorithms are mostly composed of two stages: (1) cloth warping step that warps the try-on cloth to align with the pose and shape of the target model (called GMM in CP-VTON \cite{Wang2018TowardCI}: geometric Manipulation Module), and (2) blending step that blends the warped cloth onto the target human image (called TON in CP-VTON: Try-On Network). 
 
 % the algorithms 
-We use the same dataset collected by Han et al. used in VITON\cite{Han2017VITONAI} and CP-VTON\cite{Wang2018TowardCI} papers. Here we include the SCM based-VTON, VITON \cite{Han2017VITONAI}, and  CP-VTON \cite{Wang2018TowardCI}. We included the SCM based algorithm  for a representative of non deep learning algorithm. The cloth warping step is done using SCM matching and transform from try-on cloth to the current, target cloth segmentation area, and the final VTON image is blended using simple alpha blending. For VITON and CP-VTON, a brief suumary is as follows. For more details, the reader is refer to the original papers.
+We use the same dataset collected by Han et al. used in VITON\cite{Han2017VITONAI} and CP-VTON\cite{Wang2018TowardCI} papers. Here we include the SCM based-VTON, VITON \cite{Han2017VITONAI}, and  CP-VTON \cite{Wang2018TowardCI}. We included the SCM based algorithm  for a representative of non deep learning algorithm. The cloth warping step is done using SCM matching and transform from try-on cloth to the current, target cloth segmentation area, and the final VTON image is blended using simple alpha blending. For VITON and CP-VTON, a brief summary is as follows. For more details, the reader is refer to the original papers.
+
 % GMM
 The VITON use an encoder-decoder network to generate the warped cloth mask. Then the estimated TPS parameter from SCM matching between the generated mask and input try-on cloth mask is applied to the input try-on cloth. This is because in general the generated images from an encoder-decoder network does not preserved the original cloth as well as the warped image by geometric transform. Instead, CP-VTON uses a CNN based correlation network to estimated the TPS parameter directly and use the estimated parameters for warping.   
+
 % TOM
 In the blending step, VITON generates an alpha blending mask image, which is used when alpha-blended with warped try-on cloth and human input image. The authors of CP-VTON observed that the blending is not successful when the warped  cloth area does not align well with the target area of human image, and first generates a coarse VTON results in addition to the composition mask, and then alpha-blends the warped cloth and the coarse VTON image with the alpha-composition mask.        
+
+For SCM-based VTON, the GMM stage is defined by  
+$
+   \bold{\theta} = f_{SCM} (C_t, C_i)
+$
+and
+$
+   C_{warped} = f_{TPS}(\theta, Ci)
+$.    
+The TOM stage is defined by 
+$
+   M = f_{TPS}(\theta, M_{Ci}),
+$    
+and 
+$
+   I_o = M \odot C_{warped}, + (1-M) \odot I_i 
+$
+
+For VITON, GMM stage is defined by 
+$
+   (I_{r}, M_{warped}) = f_{\theta, VITON} (H_t, C_i) 
+$
+and the loss function for training, 
+\[
+   L_{GMM}^{VITON} =   \sum_{i=0}^{5} \lambda_i || \phi (I_r) - \phi (I_i)||  
+   ||M_{c, warped} -  M_{C,t}||_1 .
+\]
+The TOM stage is defined by 
+$
+   \bold{\theta} = f_{SCM} (M_{c,t}, M_{c,i})
+$
+and
+$
+   C_{warped} = f_{TPS}(\theta, Ci) .
+$    
+TOM stage is defined by 
+$
+ M = f_{TOM} ( I_{r1}, C_warped ),  
+$
+and 
+$
+   I_o = M \odot C_{warped}, + (1-M) \odot I_{r},
+$
+with the training loss function, 
+\[
+   L_{TOM}^{VITON} = \lambda_{VGG} \sum_{i=3}^{5} \lambda_i || \phi_i(I_o) - \phi_i(I_t)||_{1}  + 
+             \lambda_{waep}  || M ||_{1}  + 
+             \lambda_{TV} || \Delta M||_{1}      
+\]
+
+Finally for CP-VTON, GMM stage is defined by 
+$  
+   \bold{\theta} = f_{\theta} ( f_H (H_t), f_C(C_i) )
+$
+and
+$
+   C_{warped} = f_{TPS}(\theta, Ci).
+$    
+with the training loss function
+\[
+   L_{GMM}^{CP-VTON} =  \sum ||(C_{warped}, C_t||_1
+\]
+TOM stage is defined by 
+$
+ (M, I_r) = f_{TOM} ( H_t, C_{warped} )  
+$
+and 
+$
+   I_o = M \odot C_{warped}, + (1-M) \odot I_r
+$
+with the training loss function, 
+\[
+   L_{TOM}^{CP-VTON} = \lambda_{L1}  || I_o - I_t ||_1  + 
+             \lambda_{VGG} \sum_{i=1}^{5} || \phi_i(I_o) - \phi_i(I_t)||_1  + 
+             \lambda_{mask} || 1 - M ||_1      
+\]
 
 
 Differently from other GAN applications where the main purpose is to generate an unseen, plausible image, VTON application needs to retain the original texture and shape of the input try-on cloth. Due to its higher performance and logical architecture, CP-VTON \cite{Wang2018TowardCI} has become the benchmark benchmark algorithm for the image-based VTON algorithms recently published 
