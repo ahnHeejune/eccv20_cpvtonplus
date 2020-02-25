@@ -29,8 +29,8 @@ $
 $
 and the loss function for training, 
 \[
-   L_{GMM}^{VITON} =   \sum_{i=0}^{5} \lambda_i || \phi (I_r) - \phi (I_i)||  
-   ||M_{c, warped} -  M_{C,t}||_1 .
+   L_{GMM}^{VITON} =   \sum_{i=0}^{5} \lambda_i || \phi (I_r) - \phi (I_i)||  + 
+   ||M_{C_{warped}} -  M_{C_t}||_1 .
 \]
 GMM of CP-VTON, GMM is defined by 
 $  
@@ -42,7 +42,7 @@ $
 $    
 with the training loss function
 \[
-   L_{GMM}^{CP-VTON} =  \sum ||(C_{warped}, C_t||_1
+   L_{GMM}^{CP-VTON} =  \sum ||C_{warped}, C_t||_1
 \]
 
 % GMM
@@ -210,7 +210,7 @@ Secondly, all the unintended part, faces, bottom-clothes and legs have to be pre
 Thirdly, the texture is often not vivid, which is due to the composition. Examining the original loss function of TOM network, the term for the composition alpha mask are poorly formulated as simple regularization loss.   
 
 \begin{equation}
-L = c_1 | I_0-I_{GT} |+  c_2 L_{VGG}+c_3 |1-M_0 |        
+L = \lambda_{L1} || I_0-I_{GT} ||_1 +  \lambda_{VGG} L_{VGG}+ \lambda_3 || 1 - M_{o} ||_1        
 \end{equation} 
 
 %4. 
