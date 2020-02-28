@@ -22,7 +22,7 @@
 
 \def\ECCVSubNumber{3284}  % Insert your submission number here
 
-\title{ CP-VTON+: Cloth Shape and Texture Preserving Image-Based Virtual Try-On 
+\title{ CP-VTON+: Clothing Shape and Texture Preserving Image-Based Virtual Try-On 
 %Image-based Virtual Try-On: its limitations and an improvement
 } % Replace with your title
 
@@ -52,7 +52,7 @@ Yukun Lai\inst{3}\orcidID{2222--3333-4444-5555}  }
 % If there are more than two authors, 'et al.' is used.
 %
 \institute{Seoul National University of Science and Technology, Seoul  08544, South Korea \and
-Cardiff University, Cardiff, 69121 Heidelberg, UK
+Cardiff University, Cardiff, Wales, UK
 \email{heejune@seoultech.ac.kr}\\
 \url{http://www.springer.com/gp/computer-science/lncs}}
 \end{comment}
@@ -62,12 +62,13 @@ Cardiff University, Cardiff, 69121 Heidelberg, UK
 \begin{abstract}
 
  Recently, image-based virtual try-on (VTON) technology has
-drawn increasing research attraction for practical online apparel shopping. We reconsider the commonly-used setting: the input of a a pair of try-on cloth and target human image, and 2-step processing methods: first, it warps the try-on cloth to
-align with the target human, and then blends the warped cloth with the
+drawn increasing research attraction for practical online apparel shopping. The commonly-used processing pipelines uses a pair of try-on cloth and target human image for input and 2-step processing methods: First, it warps the try-on cloth to align with the target human, and then blends the warped cloth with the
 target human image. 
-The contributions of this work are three-fold. First,
-despite the successful demonstration of the previous work, the input data
-condition for successful performance has not yet well investigated. Thus, we conduct a performance study with classified inputs in cloth style, and human pose and shape. reveals that the current image-based VTON algorithms have a limited working condition. Second, through our detailed examination of the classified experiment, we identify the problem in the dataset such as improper human segmentation labeling, improper matching with user demands, such as not retaining non-targeted cloth, and weakness of the state-of-the-art algorithms in cloth warping and blending. Finally, we proposed a new image-based algorithm, named CP-VTON+, tackling the observed issues. The experiment on a commonly-used dataset shows CP-VTON+ outperforms the state-of-the-art methods quantitatively: in Intersection-Over-Union and Structural Similarity Index for the same cloth re-try-on, and Inception Score and visual observation for new cloth try-on.     
+Despite the successful demonstration of the previous work, the input range
+and limitations were not yet well examined. In this work, we conduct a performance evaluation study with different cloth style and human poses and shapes. This experiment reveals the limitation of the previous image-based VTON algorithms and the commonly used dataset. 
+The current warping networks often generate severely distorted and misaligned warped clothes, because they utilize a erroneous cloth-agnostic human representation and different format input images for cloth-human matching, and the parameter estimation is not properly regularized. The current blending networks do not retain the remaining clothes because of the wrong human representation and improper training loss for composition-mask generation.
+%We identify the  in the dataset such as improper human segmentation labeling, improper matching with user demands, such as not retaining non-targeted cloth, and weakness of the state-of-the-art algorithms in training cloth warping and blending. 
+A new cloth shape and texture preserving pipeline are redesigned to solve the found issues based on the-state-of-the-art one,  CP-VTON (Characteristics Preserving VTON), so named CP-VTON+. The experiment on a commonly-used dataset shows CP-VTON+ outperforms the state-of-the-art methods quantitatively and visually, i.e., in Intersection-Over-Union and Structural Similarity Index for the same cloth re-try-on, and Inception Score and visual observation for new cloth try-on.     
 
 \keywords{Virtual Try-On, Image-based, Deep-Learning, Quality Comparison}
 \end{abstract}
@@ -82,16 +83,16 @@ condition for successful performance has not yet well investigated. Thus, we con
 
 \section{Conclusions}
 
-With no need in 3-D information, image-based approach is considered an easier and practical virtual-try-on method. Through a group of paper works, a pair of a try-on cloth and a target human image as input data has become a de-facto standards setting for image-based VTON system.   
-However, the previous work focuses on demonstrating the success of their methods and neural networks, but does not examine the limitations and their successfully operating range for the input cloth and human image.  
+With no need for 3-D information, the image-based approach is considered an easier and practical virtual-try-on method. Through a group of paper works, a pair of a try-on cloth and a target human image as input data has become a de-facto standard setting for image-based VTON system.   
+However, the previous work focuses on demonstrating the success of their methods and neural networks but does not examine the limitations and their successfully operating range for the input cloth and human image.  
 
-Even though the neural network systems are criticized for its black-box system properties, at least the real design of network structure, input data, and training mechanism are based upon the understanding on the cause-and-result relations. We demonstrated the examination of results based on the classified inputs conditions is crucial in understanding and improving the methods and systems. The experimental results show that the state-of-the-art methods works fairly well the cases with mono-colored short sleeved cloths and a up-front posed human, but not the cases with a rich-textured and long sleeved cloth or a diverse posed human.    
+Even though the neural network systems are criticized for its black-box system properties, at least the real design of network structure, input data, and training mechanism are based upon the understanding on the cause-and-result relations. We demonstrated the examination of results based on the classified inputs conditions is crucial in understanding and improving the methods and systems. The experimental results show that the state-of-the-art methods work fairly well the cases with mono-colored short-sleeved clothes and an up-front posed human, but not the cases with a rich-textured and long-sleeved cloth or a diverse posed human.    
 
-Also, in multi-stage pipeline system, the examination at intermediate results is also crucial in understanding the limitations and the working ranges. The state-of-the-art image-based VTON systems are constructed as a 2-step pipeline. Our examination of the intermediate warped clothes together with the final VTON results revealed profound problems in the-state-of-the-art methods and dataset pre-processing, e.g. erroneous cloth-agnostic human representation due to wrong labelling of the chest area, the in-ability of the non-rigid transform for 3D posed cloths, the failure in estimating transform parameters with human representation images and cloth images.    
+Also, in the multi-stage pipeline system, the examination at intermediate results is crucial in understanding the limitations and the working ranges. The state-of-the-art image-based VTON systems are constructed as a 2-step pipeline. Our examination of the intermediate warped clothes together with the final VTON results revealed profound problems in the-state-of-the-art methods and dataset pre-processing, e.g. erroneous cloth-agnostic human representation due to wrong labeling of the chest area, the inability of the non-rigid transform for 3D posed cloths, the failure in estimating transform parameters with human representation images and cloth images.    
 
-This classified examination and observation helps us to design a modification of warping network, a better input processing and new training methods, and the proposed system outperforms the state-of-the-art methods quantitatively: in Intersection-Over-Union (over 10 percent) and Structural Similarity Index (over 7 percent) for the same cloth re-try-on, and Inception Score and visual observation (over 4 percent) for new cloth try-on test.     
+This classified examination and observation helps us to design a modification of warping network, a better input processing, and new training methods, and the proposed system outperforms the state-of-the-art methods quantitatively: in Intersection-Over-Union (over 10 percent) and Structural Similarity Index (over 7 percent) for the same cloth re-try-on, and Inception Score and visual observation (over 4 percent) for new cloth try-on test.     
 
-However, the authors think image-based methods using 2-D image space have inherent limitations for covering diversely posed target human cases. Therefore, for short-term workaround, it is recommended to restrict the pose of target human image, but in the long-term solution an approaches using a 3-D mesh or voxel-based is to be required. The authors are studying model based cloth reconstruction method for this approach.
+However, the authors think image-based methods using 2-D image space have inherent limitations for covering diversely posed target human cases. Therefore, for a short-term workaround, it is recommended to restrict the pose of a target human image. In the long-term solution, approaches using 3D reconstruction \cite{natsume2019siclope,zanfir2018human} can be already found in the literature. 
 
      
 \clearpage

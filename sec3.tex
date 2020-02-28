@@ -6,7 +6,7 @@
 
 Fig. \ref{fig:piepline} illustrates the new VTON pipeline that tackle the problem mentioned above, based on the pipeline structure of CV-VTON, hence named CP-VTON+. The modified components are highlighted for comparison, described as follows.
 
-\subsubsection{GMM Modification}
+\subsubsection{Warping Stage Modification}
 
 \begin{itemize}
 
@@ -29,7 +29,7 @@ CP-VTON GMM network is built on CNN geometric matching \cite{rocco2017convolutio
 
 
 \begin{equation}
- L  = c_1 \cdot L1(I_c, I_{c,GT}) + c_2 \cdot  L_{reg}  
+ L_{GMM}^{CP-VTON+}  = \lambda_1 \cdot L1(C_{warped}, I_{C_t}) + lambda_2 \cdot  L_{reg}  
 \end{equation}
 
 \begin{equation}\label{eq:gridloss}
@@ -42,7 +42,7 @@ CP-VTON GMM network is built on CNN geometric matching \cite{rocco2017convolutio
 
 \end{itemize}
 
-\subsubsection{TOM Modification}
+\subsubsection{Blending Stage Modification }
 
 
 \begin{itemize}
