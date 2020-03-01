@@ -34,7 +34,7 @@ For different cloth try-on, Inception Score (IS) is used together with visual ex
 Figure ~\ref{fig:ablation} we highlight the impact of the identified problems and improvement of the proposed method step-by-step through the ablation study of CP-VTON+. The first and second columns are target humans and try-on clothes, respectively. The third column is vanilla CP-VTON results. The fourth column is when unchanged clothes and body parts are added to the reserved region inputs of TOM, retaining the original pants texture. The fifth column is when the mask loss function of TOM is updated with the target cloth area, making the texture and color of cloth sharp and vivid. Finally the sixth and last column is when the body masks are updated, replacing the skin area wrongly labelled as background and hair are removed from the reserved region input of GMM, making GMM can better cloth-and-hair-agnostic human representation.  
 
 
-\begin{figure}
+\begin{figure}[t]
 \centering
 \includegraphics[height=6.5cm, scale=1]{figures/ablation.png} 
 \caption{Ablation study of CP-VTON+. From left to right column: target humans, try-on clothes, CP-VTON, with corrected human representation in TOM, warped cloth mask and mask loss function updated, and CP-VTON+ (with corrected human representation in GMM)

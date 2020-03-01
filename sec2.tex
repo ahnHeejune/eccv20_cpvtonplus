@@ -48,6 +48,7 @@ with the training loss function
 \begin{equation}
    L_{GMM}^{CP-VTON} =  ||C_{warped}, C_t||_1
 \end{equation}
+
 % GMM
 The VITON use an encoder-decoder network to generate the warped cloth mask. Then the estimated TPS parameter from SCM matching between the generated mask and input try-on cloth mask is applied to the input try-on cloth. This is because in general the generated images from an encoder-decoder network does not preserved the original cloth as well as the warped image by geometric transform. Instead, CP-VTON uses a CNN based correlation network to estimated the TPS parameter directly and use the estimated parameters for warping.   
 
@@ -199,7 +200,7 @@ TOM stages of VITON and CP-VTON can hide this misalignment to some degree by ble
 %In addition to the analysis of each condition in addition to the analysis of each condition, it can be seen that there are the following big features. First, it was confirmed that the shape change of clothes by GMM has an influence on the current wear clothes. The reason is that SCMM uses the area of the current costume, and deep learning methods use the body itself, but the area of the current costume is reflected in the correct answer mask used in the learning process.
 
 
-\begin{figure}
+\begin{figure}[t]
 \centering
 %\includegraphics[height=13.5cm, scale=1]{figures/2dvton_same.png}   
 \begin{tabular}{cccccccccccc}
@@ -346,7 +347,7 @@ S &
 
 
 
-\begin{figure}
+\begin{figure}[t]
 \centering
 %\includegraphics[height=13.5cm, scale=1]{figures/2dvton_diff.png}  %% TODO  
 

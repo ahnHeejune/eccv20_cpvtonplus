@@ -1,9 +1,9 @@
-\section{CV-VTON+} \label{section:cpvton+}
+\section{CP-VTON+} \label{section:cpvton+}
 
 \subsection{Overview} 
-Based on the experiment results and analysis for problems in the previous work, the new VTON pipeline are designed based on the pipeline structure of CV-VTON, hence named CP-VTON+. Fig. \ref{fig:piepline} illustrates the architecture with highlighting the upgraded components for comparison. The details are described as follows.
+Based on the experiment results and analysis for problems in the previous work, the new VTON pipeline are designed based on the pipeline structure of CP-VTON, hence named CP-VTON+. Fig. \ref{fig:piepline} illustrates the architecture with highlighting the upgraded components for comparison. The details are described as follows.
 
-\begin{figure}
+\begin{figure}[t]
 \centering
 \includegraphics[height=6.5cm, scale=1]{figures/cpvton+pipeline.png}   
 \caption{Full pipeline Comparison: CP-VTON and CP-VTON+: TODO: UPDATE with some more detailed one!!!}
@@ -16,9 +16,9 @@ The modification in GMM stage are three locations.
 % Correction on the cloth agnostic human representation:
 First, It is crucial to obtain the complete target body area for the try-on cloth and the target area should be the current-cloth agnostic. As described above, the original VITON dataset does not satisfy this requirement. We define a segmentation correction process as follow.  
 % BG2SKIN
-To be independent upon the current cloth the human wear, a new label ‘skin’ is added to the label set, and then  the pixels wrongly labelled as 'background' in VITON dataset are replaced by 'skin' considering the joint locations. The skin-labelled area now is included in the silhouette in the human representation (Figure  ~\ref{fig:cpvtonissues} (a)).
+To be independent upon the current cloth the human wear, a new label ‘skin’ is added to the label set, and then  the pixels wrongly labeled as 'background' in VITON dataset are replaced by 'skin' considering the joint locations. The skin-labeled area now is included in the silhouette in the human representation (Figure  ~\ref{fig:cpvtonissues} (a)).
 % HAIR-OCCLUSION
-To recover the hair occlusion over the body, first the hair occlusion area are identified as the intersection of convex contour of the upper cloth and the hair-labelled area, and the intersection are re-labelled as upper cloth.   
+To recover the hair occlusion over the body, first the hair occlusion area are identified as the intersection of convex contour of the upper cloth and the hair-labeled area, and the intersection are re-labeled as upper cloth.   
 % @TODO!!
 %\ref{fig:cpvtonissues} (a)).
 

@@ -6,6 +6,10 @@
 \usepackage{comment}
 \usepackage{amsmath,amssymb} % define this before the line numbering.
 \usepackage{color}
+\usepackage{times}
+\usepackage{microtype}
+\frenchspacing
+\usepackage[colorlinks=true,linkcolor=blue,pagebackref=true,hypertexnames=true]{hyperref}
 
 % INITIAL SUBMISSION - The following two lines are NOT commented
 % CAMERA READY - Comment OUT the following two lines
@@ -42,8 +46,8 @@
 % an abbreviated paper title here
 %
 \author{Matiur Rahman Minar\inst{1}\orcidID{0000-0002-3128-2915} \and
-Thai Thanh Tuan\inst{2,3}\orcidID{1111-2222-3333-4444} \and
-Heejune Ahn\inst{3}\orcidID{2222--3333-4444-5555}  \and
+Thai Thanh Tuan\inst{2,3}\orcidID{0000-0003-2748-0529} \and
+Heejune Ahn\inst{3}\orcidID{0000-0003-1271-9998}  \and
 Paul Rosin\inst{3}\orcidID{2222--3333-4444-5555}   \and
 Yukun Lai\inst{3}\orcidID{2222--3333-4444-5555}  }
 %
@@ -70,7 +74,9 @@ The current warping networks often generate severely distorted and misaligned wa
 %We identify the  in the dataset such as improper human segmentation labeling, improper matching with user demands, such as not retaining non-targeted cloth, and weakness of the state-of-the-art algorithms in training cloth warping and blending. 
 A new cloth shape and texture preserving pipeline are redesigned to solve the found issues based on the-state-of-the-art one,  CP-VTON (Characteristics Preserving VTON), so named CP-VTON+. The experiment on a commonly-used dataset shows CP-VTON+ outperforms the state-of-the-art methods quantitatively and visually, i.e., in Intersection-Over-Union and Structural Similarity Index for the same cloth re-try-on, and Inception Score and visual observation for new cloth try-on.     
 
-\keywords{Virtual Try-On, Image-based, Deep-Learning, Quality Comparison}
+
+
+\keywords{Virtual Try-On, Image-based, Deep Learning, Quality Comparison, CP-VTON+}
 \end{abstract}
 
 
@@ -83,7 +89,7 @@ A new cloth shape and texture preserving pipeline are redesigned to solve the fo
 
 \section{Conclusions}
 
-With no need for 3-D information, the image-based approach is considered an easier and practical virtual-try-on method. Through a group of paper works, a pair of a try-on cloth and a target human image as input data has become a de-facto standard setting for image-based VTON system.   
+With no need for 3D information, the image-based approach is considered an easier and practical virtual-try-on method. Through a group of paper works, a pair of a try-on cloth and a target human image as input data has become a de-facto standard setting for image-based VTON system.   
 
 Since most algorithms operate successfully in some domain, our first purpose is to identify the successful working range and then the origin of the limitations. Because the backbox property of neural network system, we used classified input analysis and intermediate result examination. The examination reveals serious limitations on the dataset, preprocessing, the previous methods, and the inherent limitations of image-based algorithm itself. From the findings, a new system, CP-VTON+ is proposed and it outperforms the state-of-the-art methods quantitatively.
 
