@@ -84,15 +84,21 @@ A new cloth shape and texture preserving pipeline are redesigned to solve the fo
 \section{Conclusions}
 
 With no need for 3-D information, the image-based approach is considered an easier and practical virtual-try-on method. Through a group of paper works, a pair of a try-on cloth and a target human image as input data has become a de-facto standard setting for image-based VTON system.   
-However, the previous work focuses on demonstrating the success of their methods and neural networks but does not examine the limitations and their successfully operating range for the input cloth and human image.  
 
-Even though the neural network systems are criticized for its black-box system properties, at least the real design of network structure, input data, and training mechanism are based upon the understanding on the cause-and-result relations. We demonstrated the examination of results based on the classified inputs conditions is crucial in understanding and improving the methods and systems. The experimental results show that the state-of-the-art methods work fairly well the cases with mono-colored short-sleeved clothes and an up-front posed human, but not the cases with a rich-textured and long-sleeved cloth or a diverse posed human.    
+Since most algorithms operate successfully in some domain, our first purpose is to identify the successful working range and then the origin of the limitations. Because the backbox property of neural network system, we used classified input analysis and intermediate result examination. The examination reveals serious limitations on the dataset, preprocessing, the previous methods, and the inherent limitations of image-based algorithm itself. From the findings, a new system, CP-VTON+ is proposed and it outperforms the state-of-the-art methods quantitatively.
 
-Also, in the multi-stage pipeline system, the examination at intermediate results is crucial in understanding the limitations and the working ranges. The state-of-the-art image-based VTON systems are constructed as a 2-step pipeline. Our examination of the intermediate warped clothes together with the final VTON results revealed profound problems in the-state-of-the-art methods and dataset pre-processing, e.g. erroneous cloth-agnostic human representation due to wrong labeling of the chest area, the inability of the non-rigid transform for 3D posed cloths, the failure in estimating transform parameters with human representation images and cloth images.    
+The authors think image-based methods using 2-D image space have inherent limitations for covering diversely posed target human cases. Therefore, for a short-term workaround, it is recommended to restrict the pose of a target human image. In the long-term solution, approaches using 3D reconstruction \cite{natsume2019siclope,zanfir2018human} can be already found in the literature. 
 
-This classified examination and observation helps us to design a modification of warping network, a better input processing, and new training methods, and the proposed system outperforms the state-of-the-art methods quantitatively: in Intersection-Over-Union (over 10 percent) and Structural Similarity Index (over 7 percent) for the same cloth re-try-on, and Inception Score and visual observation (over 4 percent) for new cloth try-on test.     
 
-However, the authors think image-based methods using 2-D image space have inherent limitations for covering diversely posed target human cases. Therefore, for a short-term workaround, it is recommended to restrict the pose of a target human image. In the long-term solution, approaches using 3D reconstruction \cite{natsume2019siclope,zanfir2018human} can be already found in the literature. 
+%However, the previous work focuses on demonstrating the success of their methods and neural networks but does not examine the limitations and their successfully operating range for the input cloth and human image.  
+
+%Even though the neural network systems are criticized for its black-box system properties, at least the real design of network structure, input data, and training mechanism are based upon the understanding on the cause-and-result relations. We demonstrated the examination of results based on the classified inputs conditions is crucial in understanding and improving the methods and systems. The experimental results show that the state-of-the-art methods work fairly well the cases with mono-colored short-sleeved clothes and an up-front posed human, but not the cases with a rich-textured and long-sleeved cloth or a diverse posed human.    
+
+%Also, in the multi-stage pipeline system, the examination at intermediate results is crucial in understanding the limitations and the working ranges. The state-of-the-art image-based VTON systems are constructed as a 2-step pipeline. Our examination of the intermediate warped clothes together with the final VTON results revealed profound problems in the-state-of-the-art methods and dataset pre-processing, e.g. erroneous cloth-agnostic human representation due to wrong labeling of the chest area, the inability of the non-rigid transform for 3D posed cloths, the failure in estimating transform parameters with human representation images and cloth images.    
+
+%This classified examination and observation helps us to design a modification of warping network, a better input processing, and new training methods, and the proposed system outperforms the state-of-the-art methods quantitatively: in Intersection-Over-Union (over 10 percent) and Structural Similarity Index (over 7 percent) for the same cloth re-try-on, and Inception Score and visual observation (over 4 percent) for new cloth try-on test.     
+
+
 
      
 \clearpage
@@ -103,7 +109,5 @@ However, the authors think image-based methods using 2-D image space have inhere
 %
 \bibliographystyle{splncs04}
 \bibliography{cpvton+bib}
-
-
 
 \end{document}

@@ -1,20 +1,24 @@
 
-\section{Classified Performance Evaluation of Image-Based VTON}
+\section{Classified Performance Evaluation of Image-Based VTON} \label{section_comparsion}
 
 \subsection{Image-based VTON algorithms}
 
-In this Section, we started with evaluating the 2D image based VTON algorithms using a try-on cloth and a target human image. The human representation is composed of 1) heat maps for each joints 2) silhouette of human body, and 3) face and skin pixels patches (non-cloth and human identity area). It is assumed that the target human image is pre-processed for a cloth agnostic human representation by a human pose estimation like OpenPose\cite{Cao2018OpenPoseRM} and human parsing like LIP \cite{Liang2018LookIP}. % the algorithms 
-We use the same dataset collected by Han et al. used in VITON\cite{Han2017VITONAI} and CP-VTON\cite{Wang2018TowardCI} papers. Here we include the SCM based-VTON, VITON \cite{Han2017VITONAI}, and  CP-VTON \cite{Wang2018TowardCI}. We included the SCM based algorithm  for a representative of non deep learning algorithm.
+In this section, we starts with evaluating the previous 2D image based VTON algorithms using a try-on cloth and a target human image. First, the works assume preprocessing of input images for extracting the relevant information for main VTON process. The human representation extracted from the taget human (customer) image is composed of 1) heat maps for each body joint 2) a silhouette image of the human body, and 3) his or her face and skin pixels patches (non-cloth and human identity area). To be affected by the current clothing, the human representation is assumed be a cloth agnostic. This preprocessing can be done thanks to the recent advance of deep learning based technology, for example, a human pose estimation network like OpenPose\cite{Cao2018OpenPoseRM} and a human parsing network like LIP \cite{Liang2018LookIP}. We use the same dataset collected by Han et al. used in VITON\cite{Han2017VITONAI} and CP-VTON\cite{Wang2018TowardCI}. However, note that thes technology are not yet accurate enough for some input and some applications, and the dataset also has many problems, too. 
 
-For clear notation, $C_i \in R^{H \times W \times3} $ denotes the try-on input cloth image 
+
+For comparison study, we choose SCM\cite{BelongieMP02} based-VTON, VITON \cite{Han2017VITONAI}, and CP-VTON \cite{Wang2018TowardCI}. More recent works in 2019 \cite{Sun2019ImageBasedVT,Yu_2019_ICCV,jae2019viton} could not included this work because their implementation are not  available in public.  However, the general pattern of image based algorithm would be similar to the three algorithms. 
+SCM based algorithm is defined and included for a representative of non deep learning algorithm; both VITON and CP-VTON are deep neural network algorithms.
+
+%Even though CP-VTON generates the best quality outputs among them, all algorithms shows similar problems, the mistakes in human representation, improper network cost function, and the inherent limitations of 2D-based approaches.
+
+
+We starts with a brief summary of the algorithms. For more details, the reader is to refer the original works. The previous algorithms are mostly composed of two stages: (1) cloth warping step that warps the try-on cloth to align with the pose and shape of the target model (called GMM in CP-VTON \cite{Wang2018TowardCI}: geometric Manipulation Module), and (2) blending step that blends the warped cloth onto the target human image (called TOM in CP-VTON: Try-On Network). 
+
+First, for clear notation, $C_i \in R^{H \times W \times3} $ denotes the try-on input cloth image 
 and $ H_t = (J_t, R_t, S_t)$ is a human representation, 
 where $ J_t \in R^{H \times W \times J}$, $R_t \in R^{H \times W \times 3}$, and $ S_t \in R^{H \times W}$ are a joint heat-map, residual (e.g hands, faces, hairs) color pixel images, and body shape silhouette merged human parsing segmentations from a human image $I_i$, respectively.    
 
-The previous algorithms are mostly composed of two stages: (1) cloth warping step that warps the try-on cloth to align with the pose and shape of the target model (called GMM in CP-VTON \cite{Wang2018TowardCI}: geometric Manipulation Module), and (2) blending step that blends the warped cloth onto the target human image (called TON in CP-VTON: Try-On Network). 
-
-The cloth warping step is done using SCM matching and transform from try-on cloth to the current, target cloth segmentation area, and the final VTON image is blended using simple alpha blending. For VITON and CP-VTON, a brief summary is as follows. For more details, the reader is refer to the original papers.
-
-
+The cloth warping stage (GMM) is done using SCM matching and transform from try-on cloth to the current target cloth segmentation area. 
 GMM of SCM-based VTON is defined by  
 $
    \bold{\theta} = f_{SCM} (C_t, C_i)
@@ -32,7 +36,6 @@ and the loss function for training,
    L_{GMM}^{VITON} =   \sum_{i=0}^{5} \lambda_i || \phi (I_r) - \phi (I_i)||  + 
    ||M_{C_{warped}} -  M_{C_t}||_1 .
 \end{equation}
-
 GMM of CP-VTON, GMM is defined by 
 $  
    \bold{\theta} = f_{\theta} ( f_H (H_t), f_C(C_i) )
@@ -45,11 +48,12 @@ with the training loss function
 \begin{equation}
    L_{GMM}^{CP-VTON} =  ||C_{warped}, C_t||_1
 \end{equation}
-
 % GMM
 The VITON use an encoder-decoder network to generate the warped cloth mask. Then the estimated TPS parameter from SCM matching between the generated mask and input try-on cloth mask is applied to the input try-on cloth. This is because in general the generated images from an encoder-decoder network does not preserved the original cloth as well as the warped image by geometric transform. Instead, CP-VTON uses a CNN based correlation network to estimated the TPS parameter directly and use the estimated parameters for warping.   
 
 
+
+The final VTON image are blended using alpha maps.
 TOM  of SCM-based VTON  is defined by 
 $
    M = f_{TPS}(\theta, M_{Ci}),
@@ -100,18 +104,19 @@ with the training loss function,
 In TOM, the blending step, VITON generates an alpha blending mask image, which is used when alpha-blended with warped try-on cloth and human input image. The authors of CP-VTON observed that the blending is not successful when the warped  cloth area does not align well with the target area of human image, and first generates a coarse VTON results in addition to the composition mask, and then alpha-blends the warped cloth and the coarse VTON image with the alpha-composition mask.       
 
 
-Differently from other GAN applications where the main purpose is to generate an unseen, plausible image, VTON application needs to retain the original texture and shape of the input try-on cloth. Due to its higher performance and logical architecture, CP-VTON \cite{Wang2018TowardCI} has become the benchmark benchmark algorithm for the image-based VTON algorithms recently published 
-% \cite{     }.  But we can not include them in this paper because the implementations are not available. However, we believe the works share the strength and problems with three algorithms examined here. 
+Differently from other GAN applications where the main purpose is to generate an unseen, plausible image, VTON application needs to retain the original texture and shape of the input try-on cloth. Due to its higher performance and logical architecture, CP-VTON has become the benchmark algorithm for the image-based VTON algorithms recently published \cite{Sun2019ImageBasedVT,Yu_2019_ICCV,jae2019viton}.  
+
+%But we can not include them in this paper because the implementations are not available. However, we believe the works share the strength and problems with three algorithms examined here. 
 
 
 %The previous and following in 2019 share same input image and information conditions with CP-VTON and compare the results with it.
 % Add some paper summary after CP-VTON .... and explain the differences from our works.
 
  
-\subsection{Sample Classification}
+\subsection{Sample Input Image Classification}
 
 % The criteria for classification   
-First of all, the criteria for classifying the experimental samples were divided according to the complexity of the try-on clothes and the target human. The target human images are classified according to the complexity of the degree of occlusion (B, OP, OB, OF), posture (P), and shape (S) of the target cloth area of the human images. For the complexity of try-on cloths, we only uses the long sleeved (L) and short sleeved (S), because the length of sleeves is the biggest component in cloth warping and the used dataset does not have full diversity in cloth  style.    
+First of all, the criteria for classifying the experimental samples are determined according to the complexity of the try-on clothes and the target human. The target human images are classified according to the complexity of the degree of occlusion (B, OP, OB, OF), posture (P), and shape (S) of the target cloth area of the human images. For the complexity of try-on cloths, we only classify them into the long sleeved (L) and short sleeved (S), because the length of cloth sleeves is the biggest component in cloth warping and the used dataset does not have full diversity in cloth  style.    
 
 %The degree of obscuration is a factor that affects the accuracy of the object of deformation, the posture is the degree of deformation, and the complexity of the clothes means the processing complexity of the clothes themselves.
 %However, it is included in the range of classification, but not included in the actual experiment is shown in parentheses. Excluded conditions are those that are not included in the test data or that the evaluation is considered to be complex in the current technology. Based on this, six cases were classified as follows.
@@ -131,11 +136,12 @@ First of all, the criteria for classifying the experimental samples were divided
 
 \end{itemize}
 
-The cloth shape in the VITON dataset are mostly simple in shape and texture, e.g. a T-shirt (without a collar) of  monochromatic or monotone patterns. Even though it is clearly biased dataset, it is also not easy to define the un-biased one. Although all 2023 test images are used for experiment, some categories, e.g. S, does not have only small samples. But the trends of results in each category are very clear. 
+The cloth shape in the VITON dataset are mostly simple in shape and texture, e.g. a T-shirt (without a collar) of  monochromatic or monotone patterns. VITON dataset is clearly biased dataset and the performance statistics can be misleading in biased input dataset. Fir example, some categories, e.g. S, does not have only small number of samples. However, it is not easy to define and collect the un-biased one. Therefore all 2023 test image pairs are used for our experiment, we we try to show the trends of results in each category.
 
- 
+
 \subsection{Experiment Result} 
 
+For experiments we use the hyper-parameters and training as follows: The iteration number of 2 is used for SCM matching of SCM-based VTON, and the publicly available pre-trained network parameters for VITON and CP-VTON are used.
 
 For evaluation of performance, we used same cloth re-try on and new cloth try-on. 
 The same cloth re-try-on experiment are done for quantitative evaluation of the algorithm with the ground truth results. In the same clothing experiment, we evaluate the cloth warping step performance using IoU (Intersection over Union) and the blending step performance using average SSIM (Structured SIMilarity index).
@@ -147,10 +153,10 @@ The same cloth re-try-on experiment are done for quantitative evaluation of the 
 where $\hat{M}_{C_{warped}}$ and $M_{C_{GT}}$ are the estimated warped cloth's mask and the cloth area in the target human image, respectively. 
 
 \begin{equation}
- SSIM = \frac{ ( 2 \mu_x \mu_y + c_1 )(2 \sigma_{xy} + c_2) }
-             { ( \mu^2_x + \mu^2_y +c_1) ( \sigma^2_x + \sigma^2_y + c_2)}, 
+ SSIM = \frac{ ( 2 \mu_x \mu_y + C_1 )(2 \sigma_{xy} + C_2) }
+             { ( \mu^2_x + \mu^2_y +C_1) ( \sigma^2_x + \sigma^2_y + C_2)}, 
 \end{equation}
-where we used default parameters for radius, $c_1$, $c_2$, and $c_3$. 
+where we used default parameters for structure radius and the w $C_1$, and $C_2$. 
 
 The experiment results are summarized as follows:
 
@@ -178,15 +184,15 @@ TOM stages of VITON and CP-VTON can hide this misalignment to some degree by ble
 
 \item[$\bullet$] BS $\&$ BL: The clothing deformation itself shows good results similar to the result with same cloths, but there are some differences according to the algorithms in the synthesis. When switching from long to short sleeves, SCM does not restore the skin area, whereas VITON and CP-VTON can generate the skin area for the revealing bare arm. Especially due to the coarse VTON output of it, CP-VTON can generate much clear skin area.
 
-\item[$\bullet$] OP: The performance was similar to that of the same clothes.
+\item[$\bullet$] OP: The performance is similar to that of the same clothes: slightly worse than B but better than the other case.
 
 \item[$\bullet$] OBS $\&$ OBL: The same characteristics as the same image, that is, the SCM shows a problem that can not distinguish the occlusion and deformation.
 
 \item[$\bullet$] OF: As in the case of the same cloth, in the case of SCM, the synthesis algorithm needs to be improved when switching from the short sleeved to the long sleeved.
 
-\item[$\bullet$] P: As in the case of the same cloth, there was a large error in deformation and alignment of the try-on cloth.
+\item[$\bullet$] P: As in the case of the same cloth, there was a large error in deformation and alignment of the try-on cloth. The blending network of CP-VTON mitigates the errors with generated but this is only limited to the simple clothing cases only.
 
-\item[$\bullet$] S: Results shows GMM, especially of VITON and CP-VTON, can warp the new cloth to the target human body shape change, 
+\item[$\bullet$] S: Results shows GMM, especially of VITON and CP-VTON, can warp well the new cloth to the target human body shape change.
 
 \end{itemize}
 
@@ -445,7 +451,8 @@ S &
 
 \end{tabular}
 
-\caption{Classified Evaluation of Image-based VTONs (new cloth try-on): left to right, input pairs, SCM-based results, VITON results, CP-VTON results, CP-VTON+ (ours) results.}
+\caption{Classified Evaluation of Image-based VTONs (new cloth try-on): left to right, input pairs, SCM-based results, VITON results, CP-VTON results, CP-VTON+ (ours) results.
+TODO: update with new figures!}
 \label{fig:2dvton_diff}
 \end{figure}
 
@@ -453,32 +460,25 @@ S &
 \subsection{Discussion}
 
 % comparison between algorithm
-The difference and comparison of each algorithms are discussed above.
-Among the three algorithms used. In this subsection, an analysis of the performance are discussed with the focus on the origins of limitations and difference in algorithms and input condition.  
+The difference and comparison of each algorithms are discussed above. In this subsection, an analysis of the performance are discussed focusing on the origins of limitations and difference in algorithms and input condition.  
 
-\subsubsection{The warping stage}
+\subsubsection{Cloth Warping Stage}
 
-As for the warping step, interestingly, SCM-based GMM generates the best results in the alignment and deformation of the try-on clothes onto the target human for the same cloth. This is somewhat conflicting against the experiment in \cite{Wang2018TowardCI} can be explained as follows. In \cite{Wang2018TowardCI}, they only considered new cloth try-on cases.  Note that SCM can use the ground truth target in same cloth re-try-on so that it can find better matching points. However, for the new cloth cases, when the shapes of new cloth and current clothes has big difference, the results get worse than the other methods.
+As for the cloth warping stage, interestingly, SCM-based GMM generates the best results in the alignment and deformation of the try-on clothes onto the target human for the same cloth. This might sound conflicting against the experiment in \cite{Wang2018TowardCI}, but can be explained as follows. In \cite{Wang2018TowardCI}, they only considered new cloth try-on cases.  Note that SCM can use the ground truth target in same cloth re-try-on so that it can find better matching points. However, for the new cloth cases, when the shapes of new cloth and current clothes has big difference, the results get worse than the other methods.
   
-And in general, CP-VTON GMM using CNN Geometry matching algorithm shows better results than VITON GMM. Since both CP-VTON and VITON use TPS algorithm, the difference comes from TPS parameter estimation step. We can conclude the CNN-based matching works better that of VITON. Nevertheless the matching is not very reliable and the warped cloth show severe distortion, which is noticeable with clothes with clear patterns and logos. 
+And in general, CP-VTON GMM using CNN geometry matching algorithm shows better results than VITON GMM. Since both CP-VTON and VITON use TPS algorithm for cloth warping, the difference comes from TPS parameter estimation. We can conclude the CNN-based and parameter regression works better than VITON's CNN and mask generation. Nevertheless the matching results of both are not reliable and the many warped cloth results show severe distortions, which is noticeable for the clothes with strong patterns and logos. 
 
-Examination the sample they argued and tried to use cloth-agnostic human representation, the current VITON dataset target try-on area is dependent upon current cloth shape. Especially, the neck area pixels are labeled as background and some body areas are occluded by hairs or accessories (Figure \ref{fig:cpvtonissues} (a)), which affects in cloth warping and blending. 
 
-GMM module using Spatial Transform Network\cite{JaderbergSZK15} with TPS (Thin Plate Spline)\cite{Bookstein1989PrincipalWT} deformation cannot handle strong 3D deformation due to the target pose and also generates artifacts because of the person representation inputs. For example, hands-up and folded arms.  Note that many errors in the warping stage are often hidden in the blending stage when the target clothes are single-colored, which can be expected in practical conditions (Figure \ref{fig:cpvtonissues} (a)),
-%(Fig. 3 (d)).
+Also, they in \cite{Han2017VITONAI} argued and tried to use cloth-agnostic human representation, the current VITON dataset target try-on area is dependent upon current cloth shape. Especially, the neck area pixels are labeled as background and some body areas are occluded by hairs or accessories (Figure \ref{fig:cpvtonissues} (a)), which affects in cloth warping and blending. 
+
+
+As a final note, any the non-rigid but 2D transform algorithm including TPS (Thin Plate Spline)\cite{Bookstein1989PrincipalWT} used the algorithm studied cannot handle strong 3-D deformation of cloth from human poses. This is one of a inherent limitation of the current image-based algorithms.
 
 
 \subsubsection{The blending stage}      
       
-As for the blending stage, CP-VTON performs best among three algorithms. SCM generates clear texture but a noticeable cloth boundaries due to the binary mask used for blending. CP-VTON generated much clearer cloth texture thanks to its composition mask and synthesized VTON result.
-
-% 2.
-%Secondly, 
-All the other parts but the target cloth area, e.g. faces, hair, and arms, bottom-clothes have to be retained in blending stage. But other parts except face and hair are missing in CP-VTON\cite{Wang2018TowardCI} human representation and generated at blending stage, which is all right for general synthesis application but not desirable in VTON application (Figure \ref{fig:cpvtonissues} (c)). 
-
-
-% 3.
-The texture is often not vivid, which is due to the unclear composition mask. Examining the original loss function of TOM network, the term for the composition alpha mask are poorly formulated as simple regularization loss $|| 1 - M_{o} ||_1$.   
+As for the blending stage (TOM), CP-VTON performs best among three algorithms. SCM generates the most clear texture but a noticeable cloth boundaries due to the binary mask used for blending. CP-VTON generated much clearer cloth texture thanks to its composition mask and synthesized coarse VTON image.
+To get clear texture, composition mask should be more confident value (1.0) for blending with warped cloth pixels not from the generated coarse images. By examining the composition mask and reasoning \ref{fig:cpvtonissues}: (b)), we conclude the the loss function are poorly formulated as simple regularization loss $|| 1 - M_{o} ||_1$, which will be corrected in the our model.   
 
 %
 %\begin{equation}
@@ -487,8 +487,10 @@ The texture is often not vivid, which is due to the unclear composition mask. Ex
 
 
 %4. 
-Finally, with a corresponding mask input, the pixel areas for white colored clothes are confused and improperly processed in the blending networks (Figure \ref{fig:cpvtonissues}: (d))
+Finally, with a corresponding mask input, the pixel areas for white colored clothes are confused and improperly processed in the blending networks (Figure \ref{fig:cpvtonissues}: (b))
 % (Fig. 3 (c))
+
+Finally, all the other parts but the target cloth area, e.g. faces, hair, and arms, bottom-clothes have to be retained in blending stage. But other parts except face and hair are missing in VITON and CP-VTON human representation for TOM and generated at blending stage, which is all right for general synthesis application but not desirable in VTON application (Figure \ref{fig:cpvtonissues} (c)). 
 
 
 %All the used image-based algorithms shows similar trends in each input
@@ -502,11 +504,13 @@ Finally, with a corresponding mask input, the pixel areas for white colored clot
 \includegraphics[ height=2cm, keepaspectratio]{figures/issue/labelsilhouette.png} \\
 (a) the human representation problem for the warping stage (original vs ours)\\
 
-\includegraphics[ height=2cm, keepaspectratio]{figures/issue/tomhuman.png} \\
-(b) the human representation problem for the blending stage (original vs ours)\\
 
 \includegraphics[ height=2cm, keepaspectratio]{figures/issue/tommaskloss.png} \\
-(c) the warped cloth mask color problem and composition mask output (original vs ours) \\
+(b) the warped cloth mask color problem and composition mask output (original vs ours) \\
+
+\includegraphics[ height=2cm, keepaspectratio]{figures/issue/tomhuman.png} \\
+(c) the human representation problem for the blending stage (original vs ours)\\
+
 
 \end{tabular}
 
